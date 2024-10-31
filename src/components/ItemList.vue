@@ -2,11 +2,11 @@
 import Item from './Item.vue'
 </script>
 <template>
-    <div class="grid grid-cols-4 gap-5 ">
+  <div class="grid grid-cols-4 gap-5 mt-5">
     <Item imageUrl="/sneakers/sneakers-1.jpg" />
-    <Item  />
-    <Item  />
-    <Item  />
-    <Item  />
-    </div>
+    <Item />
+    <Item />
+    <Item />
+    <Item />
+  </div>
 </template>
