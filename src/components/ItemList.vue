@@ -9,10 +9,12 @@ defineProps({
 <template>
   <div class="grid grid-cols-4 gap-5 mt-5">
     <Item
-      title="Мужские Кроссовки Nike Blazer"
-      imageUrl="/sneakers/sneakers-1.jpg"
-      :price="5000"
-      isFavourite="false"
+      v-for="item in items"
+      :key="item.id"
+      :title="item.title"
+      :img="item.imageUrl"
+      :price="item.price"
+      isFavourite="true"
       :onClickAdd="onClickAdd"
       :isAdded="true"
     />
