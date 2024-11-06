@@ -7,7 +7,7 @@ defineProps({
   price: Number
 })
 
-const isLiked = ref(false)
+const isLiked = ref(true)
 
 const onClick = () => {
   isLiked.value = !isLiked.value

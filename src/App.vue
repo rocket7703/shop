@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, reactive } from 'vue'
+import { onMounted, ref, watch, reactive, onErrorCaptured } from 'vue'
 
 import Header from './components/Header.vue'
 import ItemList from './components/ItemList.vue'
@@ -11,7 +11,25 @@ const filters = reactive({
   sortBy: 'title',
   searchQuery: ''
 })
-
+const fetchFavorites = async () => {
+  try {
+    const { data: favorites } = await axios.get('https://ce3e5379497a47dc.mokky.dev/favorites')
+    items.value = items.value.map((item) => {
+      const favorite = favorites.find((favorite) => favorite.parentId === item.id)
+      if (!favorite) {
+        return item
+      }
+      return {
+        ...item,
+        isFavourite: true,
+        favoriteId: favorite.id
+      }
+    })
+    console.log(items.value)
+  } catch (err) {
+    console.log(err)
+  }
+}
 const onChangeSelect = (event) => {
   filters.sortBy = event.target.value
 }
@@ -31,12 +49,15 @@ const fetchItems = async () => {
     const { data } = await axios.get('https://ce3e5379497a47dc.mokky.dev/items', {
       params
     })
-    items.value = data
+    items.value = data.map((obj) => ({ ...obj, isFavourite: true, isAdded: false }))
   } catch (err) {
     console.log(err)
   }
 }
-onMounted(fetchItems)
+onMounted(async () => {
+  await fetchItems()
+  await fetchFavorites()
+})
 watch(filters, fetchItems)
 </script>
 <template>
