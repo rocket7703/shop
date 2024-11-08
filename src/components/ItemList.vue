@@ -4,6 +4,8 @@ import Item from './Item.vue'
 defineProps({
   items: Array
 })
+
+const emit = defineEmits('addToCart')
 </script>
 
 <template>
@@ -14,8 +16,9 @@ defineProps({
       :title="item.title"
       :img="item.imageUrl"
       :price="item.price"
-      isFavourite="true"
-      :onClickAdd="onClickAdd"
+      :id="item.id"
+      :isLiked="item.isFavorite"
+      :onClickAdd="() => emit('addToCart', item)"
       :isAdded="true"
     />
   </div>
