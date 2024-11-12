@@ -2,8 +2,9 @@
 import DrawerHead from './DrawerHead.vue'
 import Cardlist from './Cardlist.vue'
 
-defineProps({
-  total: Number
+const props = defineProps({
+  total: Number,
+  createOrder: Function
 })
 </script>
 <template>
@@ -21,7 +22,9 @@ defineProps({
       </div>
 
       <button
-        class="bg-lime-500 hover:bg-lime-600 active:bg-lime-700 text-white w-10/12 rounded-xl py-3 mx-8"
+        :disabled="total ? false : true"
+        @click="createOrder"
+        class="bg-lime-500 hover:bg-lime-600 active:bg-lime-700 text-white w-10/12 rounded-xl py-3 mx-8 disabled:bg-slate-300"
       >
         Купить
       </button>

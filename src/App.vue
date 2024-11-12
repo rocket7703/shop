@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref, watch, reactive, provide, computed } from 'vue'
-
+import Alert from './components/Alert.vue'
 import Header from './components/Header.vue'
 import ItemList from './components/ItemList.vue'
 import Drawer from './components/Drawer.vue'
@@ -9,13 +9,17 @@ import axios from 'axios'
 const items = ref([])
 const cart = ref([])
 const cartItems = ref([])
-
+const isCreatingOrder = ref(false)
 const total = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
 const drawerOpen = ref(false)
+const alertOpen = ref(false)
 const closeDrawer = () => {
   drawerOpen.value = false
 }
 
+const openAlert = () => {
+  alertOpen.value = true
+}
 const openDrawer = () => {
   drawerOpen.value = true
 }
@@ -24,14 +28,33 @@ const filters = reactive({
   searchQuery: ''
 })
 
+const reloadPage = () => {
+  window.location.reload()
+}
 const addToCart = (item) => {
   cart.value.push(item)
   item.isAdded = true
 }
 const removeFromCart = (item) => {
   cart.value.splice(cart.value.indexOf(item), 1)
-  console.log('hueta')
+
   item.isAdded = false
+}
+
+const createOrder = async () => {
+  openAlert()
+  cart.value = []
+
+  try {
+    const { data } = await axios.post('https://ce3e5379497a47dc.mokky.dev/orders', {
+      items: cart.value,
+      total: total.value
+    })
+
+    return data
+  } catch (err) {
+    console.log(err)
+  }
 }
 const onClickAddPlus = (item) => {
   if (!item.isAdded) {
@@ -109,7 +132,8 @@ provide('cart', {
 </script>
 <template>
   <div class="bg-white w-4/5 m-auto rounded-xl shadow-xl mt-10">
-    <Drawer :total="total" v-if="drawerOpen" />
+    <Alert v-if="alertOpen" :reload-page="reloadPage" />
+    <Drawer :createOrder="createOrder" :total="total" v-if="drawerOpen" />
     <Header :total="total" @openDrawer="openDrawer" />
     <div class="p-10">
       <div class="flex justify-between items-center">
