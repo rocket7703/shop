@@ -12,6 +12,10 @@ const props = defineProps({
 })
 const addToFavorite = inject('addToFavorite')
 const isLiked = ref(true)
+
+const onClick = () => {
+  isLiked.value = !isLiked.value
+}
 const onClickFavorite = () => {
   const obj = {
     parentId: props.id
@@ -35,7 +39,7 @@ const onClickFavorite = () => {
         <span class="font-bold">{{ price }} руб.</span>
       </div>
 
-      <img @click="onClickAdd" :src="isAdded ? '/plus.svg' : '/checked.svg'" alt="Plus" />
+      <img @click="onClickAdd" :src="!isAdded ? '/plus.svg' : '/checked.svg'" alt="Plus" />
     </div>
   </div>
 </template>

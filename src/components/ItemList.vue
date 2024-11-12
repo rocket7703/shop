@@ -17,9 +17,9 @@ const emit = defineEmits('addToCart')
       :img="item.imageUrl"
       :price="item.price"
       :id="item.id"
-      :isLiked="item.isFavorite"
+      :isLiked="true"
       :onClickAdd="() => emit('addToCart', item)"
-      :isAdded="true"
+      :isAdded="item.isAdded"
     />
   </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref, watch, reactive, provide } from 'vue'
+import { onMounted, ref, watch, reactive, provide, computed } from 'vue'
 
 import Header from './components/Header.vue'
 import ItemList from './components/ItemList.vue'
@@ -10,6 +10,7 @@ const items = ref([])
 const cart = ref([])
 const cartItems = ref([])
 
+const total = computed(() => cart.value.reduce((acc, item) => acc + item.price, 0))
 const drawerOpen = ref(false)
 const closeDrawer = () => {
   drawerOpen.value = false
@@ -24,9 +25,19 @@ const filters = reactive({
 })
 
 const addToCart = (item) => {
+  cart.value.push(item)
+  item.isAdded = true
+}
+const removeFromCart = (item) => {
+  cart.value.splice(cart.value.indexOf(item), 1)
+  console.log('hueta')
+  item.isAdded = false
+}
+const onClickAddPlus = (item) => {
   if (!item.isAdded) {
     cart.value.push(item)
     item.isAdded = true
+    console.log(item)
   } else {
     cart.value.splice(cart.value.indexOf(item), 1)
     item.isAdded = false
@@ -87,15 +98,19 @@ onMounted(async () => {
 })
 watch(filters, fetchItems)
 
-provide('cartActions', {
+provide('cart', {
+  cart,
   closeDrawer,
-  openDrawer
+  openDrawer,
+  onClickAddPlus,
+  addToCart,
+  removeFromCart
 })
 </script>
 <template>
   <div class="bg-white w-4/5 m-auto rounded-xl shadow-xl mt-10">
-    <Drawer v-if="drawerOpen" />
-    <Header @openDrawer="openDrawer" />
+    <Drawer :total="total" v-if="drawerOpen" />
+    <Header :total="total" @openDrawer="openDrawer" />
     <div class="p-10">
       <div class="flex justify-between items-center">
         <h2 class="m-2 text-3xl font-bold">Все кроссовки</h2>
@@ -117,7 +132,7 @@ provide('cartActions', {
         </div>
       </div>
 
-      <ItemList :items="items" @add-to-cart="addToCart" />
+      <ItemList :items="items" @add-to-cart="onClickAddPlus" />
     </div>
   </div>
 </template>

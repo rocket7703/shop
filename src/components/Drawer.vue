@@ -1,6 +1,10 @@
 <script setup>
 import DrawerHead from './DrawerHead.vue'
 import Cardlist from './Cardlist.vue'
+
+defineProps({
+  total: Number
+})
 </script>
 <template>
   <div class="fixed top-0 left-0 h-full w-full bg-black z-10 opacity-50"></div>
@@ -13,7 +17,7 @@ import Cardlist from './Cardlist.vue'
         <span>Итого:</span>
         <div class="flex-1 border-b border-dashed"></div>
 
-        <b>4 700 руб</b>
+        <b>{{ total }} руб</b>
       </div>
 
       <button
